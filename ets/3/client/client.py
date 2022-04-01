@@ -20,7 +20,7 @@ def make_socket(destination_address='localhost',port=10000):
     except Exception as ee:
         logging.warning(f"error {str(ee)}")
         
-def make_secure_socket(destination_address='localhost', port=10000):
+def make_secure_socket(destination_address='localhost', port=12000):
     try:
         # get it from https://curl.se/docs/caextract.html
 

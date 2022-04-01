@@ -1,9 +1,9 @@
-import os
 import socket
 import logging
 import json
 import ssl
 import threading
+import os
 
 alldata = dict()
 alldata['1']=dict(nomor=1, nama="David De Gea", posisi="GK 1")
@@ -64,15 +64,17 @@ def serialisasi(a):
     return serialized
 
 def run_server(server_address, is_secure=False):
-    # BUAT SECURE SOCKET
+    # ------------------------------ SECURE SOCKET INITIALIZATION ----
     if is_secure == True:
         print(os.getcwd())
-        cert_location = os.getcwd() + "/certs/"
+        cert_location = os.getcwd() + '/certs/'
         socket_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
         socket_context.load_cert_chain(
-            certfile=cert_location + '/domain.crt',
-            keyfile=cert_location + '/domain.key'
-            )
+            certfile=cert_location + 'domain.crt',
+            keyfile=cert_location + 'domain.key'
+        )
+    # ---------------------------------
+    
     #--- INISIALISATION ---
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -88,16 +90,16 @@ def run_server(server_address, is_secure=False):
     while True:
         # Wait for a connection
         logging.warning("waiting for a connection")
-        connection, client_address = sock.accept()
+        koneksi, client_address = sock.accept()
         logging.warning(f"Incoming connection from {client_address}")
         # Receive the data in small chunks and retransmit it
 
         try:
             if is_secure == True:
-                connect = socket_context.wrap_socket(
-                    connection, server_side=True)
+                connection = socket_context.wrap_socket(
+                    koneksi, server_side=True)
             else:
-                connect = connection
+                connection = koneksi
 
             threads[thread_index] = threading.Thread(
                 target=send_data, args=(client_address, connection))
